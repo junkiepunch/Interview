@@ -181,7 +181,7 @@ class QLearning():
                 z=z+1
                 demand_sas = np.sum(np.take(self.demand, l)) 
                 Demand_satisfaction = Demand_satisfaction + demand_sas
-                print("Vehicle",self.Priority[z-1]+1,"Route =>", l[1:], ", Vehicle Capacity Satisfaction rate: %", 100*demand_sas/self.vehicle_capacity[self.Priority[z-1]])
+                print("Vehicle",self.Priority[z-1]+1,"Route =>", l[1:]-2, ", Vehicle Capacity Satisfaction rate: %", 100*demand_sas/self.vehicle_capacity[self.Priority[z-1]])
         print("")
         print(
             "Demand satisfaction:",
@@ -235,12 +235,14 @@ class QLearning():
             if len(l) != 0:
                 json_route.append(l[1:])
 
-        routes_dict = {"1": json_route[self.PriorityDict.index(0)], '2': json_route[self.PriorityDict.index(1)], '3': json_route[self.PriorityDict.index(2)]}
-        delivery_durationdict = {"1": gettime(json_route,self.PriorityDict.index(0)),"2": gettime(json_route,self.PriorityDict.index(1)),"3": gettime(json_route,self.PriorityDict.index(2))}
-        final_Dict = {"total_delivery_duration": self.big_cost,
-                  "routes": routes_dict, "delivery_duration":delivery_durationdict}
+        output = {}
+        routes = {}
+        for i in range(3):
+            routes[i+1] = {"jobs":json_route[self.PriorityDict.index(i)]-2,"delivery_duration": gettime(json_route,self.PriorityDict.index(i))}
+        output["total_delivery_duration"] = self.big_cost
+        output["routes"] = routes
         with open("Data_File.json", 'w') as file:
-              json.dump(final_Dict, file, indent=4, sort_keys=True,
+              json.dump(output, file, indent=4, sort_keys=True,
               separators=(', ', ': '), ensure_ascii=False,
               cls=MyEncoder)
 
