@@ -262,5 +262,5 @@ class MyEncoder(json.JSONEncoder):
 
 if __name__ == '__main__':
     Start = QLearning()
-    Start.readJson("getir_algo_input.json")
+    Start.readJson("algo_input.json")
     Start.StartProgram()
